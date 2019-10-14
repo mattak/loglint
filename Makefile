@@ -7,11 +7,15 @@ GOINSTALL=$(GOCMD) install
 BINARY_NAME=loglint
 BINARY_DIR=bin
 
-all: clean deps test build system_install
+all: clean deps deps-test test build system_install
 
 .PHONY: deps
 deps:
 	$(GOCMD) get
+
+.PHONY: deps-test
+deps-test:
+	$(GOCMD) get github.com/stretchr/testify/assert
 
 .PHONY: test
 test:
