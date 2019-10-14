@@ -9,14 +9,14 @@ import (
 
 type Rule struct {
 	DetectionsRegex []regexp.Regexp
-	Detections      []string `json:detections`
-	Help            string   `json:help`
-	Type            string   `json:type`
+	Detections      []string `json:"detections"`
+	Help            string   `json:"help"`
+	Type            string   `json:"type"`
 }
 
 type Result struct {
-	Matches []string
-	Help    string
+	Matches []string `json:"matches"`
+	Help    string   `json:"help"`
 }
 
 func LoadRules(filename string) ([]Rule, error) {

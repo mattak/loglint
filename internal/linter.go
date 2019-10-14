@@ -8,14 +8,14 @@ import (
 )
 
 type Linter struct {
-	Errors   []Rule `json:errors`
-	Warnings []Rule `json:warnings`
+	Errors   []Rule `json:"errors"`
+	Warnings []Rule `json:"warnings"`
 }
 
 type LintResult struct {
-	Passed   bool     `json:passed`
-	Errors   []Result `json:errors`
-	Warnings []Result `json:warnings`
+	Passed   bool     `json:"passed"`
+	Errors   []Result `json:"errors"`
+	Warnings []Result `json:"warnings"`
 }
 
 func (linter *Linter) Prepare(filepath string) {
