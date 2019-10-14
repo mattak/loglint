@@ -1,0 +1,8 @@
+[
+	{
+		"detections": ["^Error"],
+		"help": "see docs",
+		"name": "general error detection",
+		"type": "error"
+	}
+]
