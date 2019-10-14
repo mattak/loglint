@@ -18,13 +18,27 @@ type LintResult struct {
 	Warnings []Result `json:"warnings"`
 }
 
-func (linter *Linter) Prepare(filepath string) {
+func (linter *Linter) PrepareByFile(filepath string) {
 	rules, err := LoadRules(filepath)
 
 	if err != nil {
-		log.Fatal("Loading rules error. ", err)
+		log.Fatal("Loading rules file error. ", err)
 	}
 
+	linter.Prepare(rules)
+}
+
+func (linter *Linter) PrepareByContent(content string) {
+	rules, err := LoadRulesByContent(content)
+
+	if err != nil {
+		log.Fatal("Loading rules contents error. ", err)
+	}
+
+	linter.Prepare(rules)
+}
+
+func (linter *Linter) Prepare(rules []Rule) {
 	var errorRules []Rule
 	var warningRules []Rule
 

@@ -22,9 +22,22 @@ func readall(r io.Reader) string {
 
 func main() {
 	app := cli.NewApp()
-	app.Name = "unitylint"
-	app.Usage = "unity linter by build log"
-	app.Description = "Parse unity log to simplify errors and warnings."
+	app.Name = "loglint"
+	app.Usage = "log linter by local rules"
+	app.Description = "Analyze errors and warnings from log by simple rule file."
+	app.Version = "0.1.0"
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name: "execute, e",
+			Value: "",
+			Usage: "rule json content by argument",
+		},
+		cli.StringFlag{
+			Name: "file, f",
+			Value: ".loglint.json",
+			Usage: "rule json file path",
+		},
+	}
 	app.Action = func(c *cli.Context) error {
 		var reader io.Reader
 
@@ -42,7 +55,15 @@ func main() {
 		}
 
 		linter := internal.Linter{}
-		linter.Prepare(".loglint.json")
+
+		if len(c.String("execute")) > 0 {
+			linter.PrepareByContent(c.String("execute"))
+		} else if len(c.String("file")) > 0 {
+			linter.PrepareByFile(c.String("file"))
+		} else {
+			log.Fatal("Rule option error. please specify --execute or --file option.")
+		}
+
 		result := linter.Run(readall(reader))
 		result.Print()
 

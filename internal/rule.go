@@ -42,6 +42,15 @@ func LoadRules(filename string) ([]Rule, error) {
 	return rules, nil
 }
 
+func LoadRulesByContent(content string) ([]Rule, error) {
+	var rules []Rule
+	if err := json.Unmarshal([]byte(content), &rules); err != nil {
+		return nil, err
+	}
+
+	return rules, nil
+}
+
 func (rule *Rule) IsError() bool {
 	return rule.Type == "error";
 }
@@ -76,8 +85,8 @@ func (rule *Rule) Matches(lines []string) (*Result, bool) {
 	if len(matches) < 1 {
 		return &Result{
 			Matches: nil,
-			Help: rule.Help,
-			Name: rule.Name,
+			Help:    rule.Help,
+			Name:    rule.Name,
 		}, false
 	}
 
