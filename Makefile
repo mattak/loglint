@@ -24,7 +24,7 @@ run:
 .PHONY: clean
 clean:
 	$(GOCLEAN)
-	rm -r $(BINARY_DIR)
+	rm -rf $(BINARY_DIR)
 
 .PHONY: system_install
 system_install:
