@@ -22,7 +22,7 @@ func (linter *Linter) Prepare(filepath string) {
 	rules, err := LoadRules(filepath)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Loading rules error. ", err)
 	}
 
 	var errorRules []Rule
@@ -73,7 +73,7 @@ func Analyze(lines []string, rules []Rule) []Result {
 func (result *LintResult) Print() {
 	data, err := json.Marshal(result)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Marshal result json error. ", err)
 	}
 
 	fmt.Print(string(data))

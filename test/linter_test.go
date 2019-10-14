@@ -42,9 +42,10 @@ func TestAnalyze(t *testing.T) {
 	{
 		rule := internal.Rule{
 			DetectionsRegex: nil,
-			Detections:      []string{"1","3"},
+			Detections:      []string{"1", "3"},
 			Help:            "",
 			Type:            "error",
+			Name:            "sample",
 		}
 		rule.Build()
 

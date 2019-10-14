@@ -91,7 +91,8 @@ func TestMatches(t *testing.T) {
 		context.writeFile("/tmp/test/1.json", `[
 	{
 		"detections": ["^Error: "],
-		"help": "help1"
+		"help": "help1",
+		"name": "sample1"
 	}
 ]`)
 
@@ -104,7 +105,9 @@ hello
 world
 `, "\n"))
 			assert.False(t, isMatched)
-			assert.Nil(t, matched)
+			assert.Nil(t, matched.Matches)
+			assert.Equal(t, "sample1", matched.Name)
+			assert.Equal(t, "help1", matched.Help)
 		}
 
 		{
@@ -114,7 +117,7 @@ hello
 world
 `, "\n"))
 			assert.False(t, isMatched)
-			assert.Nil(t, matched)
+			assert.Nil(t, matched.Matches)
 		}
 
 		{
@@ -124,7 +127,7 @@ Error:
 world
 `, "\n"))
 			assert.True(t, isMatched)
-			assert.NotNil(t, matched)
+			assert.NotNil(t, matched.Matches)
 			assert.Equal(t, 1, len(matched.Matches))
 			assert.Equal(t, 2, matched.Matches[0].StartIndex)
 			assert.Equal(t, 3, matched.Matches[0].EndIndex)
@@ -138,7 +141,8 @@ world
 		context.writeFile("/tmp/test/2.json", `[
 	{
 		"detections": ["^start", "^middle", "^end"],
-		"help": "help2"
+		"help": "help2",
+		"name": "sample2"
 	}
 ]`)
 
@@ -153,7 +157,9 @@ middle
 end
 `, "\n"))
 			assert.False(t, isMatched)
-			assert.Nil(t, matched)
+			assert.Nil(t, matched.Matches)
+			assert.Equal(t, "sample2", matched.Name)
+			assert.Equal(t, "help2", matched.Help)
 		}
 
 		{
@@ -163,7 +169,7 @@ start
 end
 `, "\n"))
 			assert.False(t, isMatched)
-			assert.Nil(t, matched)
+			assert.Nil(t, matched.Matches)
 		}
 
 		{
@@ -173,7 +179,7 @@ middle
  end
 `, "\n"))
 			assert.False(t, isMatched)
-			assert.Nil(t, matched)
+			assert.Nil(t, matched.Matches)
 		}
 
 		{
@@ -185,7 +191,7 @@ bbb
 end
 `, "\n"))
 			assert.True(t, isMatched)
-			assert.NotNil(t, matched)
+			assert.NotNil(t, matched.Matches)
 			assert.Equal(t, 1, len(matched.Matches))
 			assert.Equal(t, 1, matched.Matches[0].StartIndex)
 			assert.Equal(t, 6, matched.Matches[0].EndIndex)
@@ -205,7 +211,7 @@ middle
 end
 `, "\n"))
 			assert.True(t, isMatched)
-			assert.NotNil(t, matched)
+			assert.NotNil(t, matched.Matches)
 			assert.Equal(t, 2, len(matched.Matches))
 			assert.Equal(t, 1, matched.Matches[0].StartIndex)
 			assert.Equal(t, 6, matched.Matches[0].EndIndex)

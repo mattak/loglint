@@ -13,11 +13,13 @@ type Rule struct {
 	Detections      []string `json:"detections"`
 	Help            string   `json:"help"`
 	Type            string   `json:"type"`
+	Name            string   `json:"name"`
 }
 
 type Result struct {
 	Matches []Match `json:"matches"`
 	Help    string  `json:"help"`
+	Name    string  `json:"name"`
 }
 
 type Match struct {
@@ -49,7 +51,7 @@ func (rule *Rule) Build() {
 		regex, err := regexp.Compile(detection)
 
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal("Rule regex compile error. ", err)
 		}
 
 		rule.DetectionsRegex = append(rule.DetectionsRegex, *regex)
@@ -72,12 +74,17 @@ func (rule *Rule) Matches(lines []string) (*Result, bool) {
 	}
 
 	if len(matches) < 1 {
-		return nil, false
+		return &Result{
+			Matches: nil,
+			Help: rule.Help,
+			Name: rule.Name,
+		}, false
 	}
 
 	return &Result{
 		Matches: matches,
 		Help:    rule.Help,
+		Name:    rule.Name,
 	}, len(matches) > 0
 }
 
