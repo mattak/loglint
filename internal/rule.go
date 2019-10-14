@@ -16,8 +16,14 @@ type Rule struct {
 }
 
 type Result struct {
-	Matches []string `json:"matches"`
-	Help    string   `json:"help"`
+	Matches []Match `json:"matches"`
+	Help    string  `json:"help"`
+}
+
+type Match struct {
+	StartIndex int    `json:"start"`
+	EndIndex   int    `json:"end"`
+	Message    string `json:"message"`
 }
 
 func LoadRules(filename string) ([]Rule, error) {
@@ -51,17 +57,17 @@ func (rule *Rule) Build() {
 }
 
 func (rule *Rule) Matches(lines []string) (*Result, bool) {
-	matches := []string{}
+	matches := []Match{}
 	pass := true
 	index := 0
 
 	for pass {
-		match, _index, _pass := rule.Match(lines, index)
+		match, _pass := rule.Match(lines, index)
 		pass = _pass
-		index = _index
 
 		if _pass {
-			matches = append(matches, match)
+			index = match.EndIndex
+			matches = append(matches, *match)
 		}
 	}
 
@@ -75,17 +81,17 @@ func (rule *Rule) Matches(lines []string) (*Result, bool) {
 	}, len(matches) > 0
 }
 
-func (rule *Rule) Match(lines []string, fromIndex int) (string, int, bool) {
+func (rule *Rule) Match(lines []string, fromIndex int) (*Match, bool) {
 	matchStartIndex := -1
 	matchLastIndex := fromIndex - 1
 	lastRuleIndex := -1
 
 	if len(rule.DetectionsRegex) < 1 {
-		return "", len(lines), false
+		return nil, false
 	}
 
 	if fromIndex >= len(lines) {
-		return "", len(lines), false
+		return nil, false
 	}
 
 	for ruleIndex, regex := range rule.DetectionsRegex {
@@ -103,10 +109,15 @@ func (rule *Rule) Match(lines []string, fromIndex int) (string, int, bool) {
 		}
 
 		if lastRuleIndex != ruleIndex {
-			return "", len(lines), false
+			return nil, false
 		}
 	}
 
 	matched := strings.Join(lines[matchStartIndex:(matchLastIndex+1)], "\n")
-	return matched, matchLastIndex + 1, true
+
+	return &Match{
+		StartIndex: matchStartIndex,
+		EndIndex:   matchLastIndex + 1,
+		Message:    matched,
+	}, true
 }

@@ -125,6 +125,10 @@ world
 `, "\n"))
 			assert.True(t, isMatched)
 			assert.NotNil(t, matched)
+			assert.Equal(t, 1, len(matched.Matches))
+			assert.Equal(t, 2, matched.Matches[0].StartIndex)
+			assert.Equal(t, 3, matched.Matches[0].EndIndex)
+			assert.Equal(t, "Error: ", matched.Matches[0].Message)
 			assert.Equal(t, "help1", matched.Help)
 		}
 	}
@@ -182,7 +186,10 @@ end
 `, "\n"))
 			assert.True(t, isMatched)
 			assert.NotNil(t, matched)
-			assert.Equal(t, []string{"start\naaa\nmiddle\nbbb\nend"}, matched.Matches)
+			assert.Equal(t, 1, len(matched.Matches))
+			assert.Equal(t, 1, matched.Matches[0].StartIndex)
+			assert.Equal(t, 6, matched.Matches[0].EndIndex)
+			assert.Equal(t, "start\naaa\nmiddle\nbbb\nend", matched.Matches[0].Message)
 			assert.Equal(t, "help2", matched.Help)
 		}
 
@@ -199,8 +206,14 @@ end
 `, "\n"))
 			assert.True(t, isMatched)
 			assert.NotNil(t, matched)
-			assert.Equal(t, []string{"start\naaa\nmiddle\nbbb\nend", "start\nmiddle\nend"}, matched.Matches)
-			assert.Equal(t, "help2", matched.Help)
+			assert.Equal(t, 2, len(matched.Matches))
+			assert.Equal(t, 1, matched.Matches[0].StartIndex)
+			assert.Equal(t, 6, matched.Matches[0].EndIndex)
+			assert.Equal(t, 6, matched.Matches[1].StartIndex)
+			assert.Equal(t, 9, matched.Matches[1].EndIndex)
+			assert.Equal(t, "start\naaa\nmiddle\nbbb\nend", matched.Matches[0].Message)
+		assert.Equal(t, "start\nmiddle\nend", matched.Matches[1].Message)
+	assert.Equal(t, "help2", matched.Help)
 		}
 	}
 }

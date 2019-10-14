@@ -52,6 +52,8 @@ func TestAnalyze(t *testing.T) {
 
 		assert.Equal(t, 1, len(results))
 		assert.Equal(t, 1, len(results[0].Matches))
-		assert.Equal(t, "1\n2\n3", results[0].Matches[0])
+		assert.Equal(t, 0, results[0].Matches[0].StartIndex)
+		assert.Equal(t, 3, results[0].Matches[0].EndIndex)
+		assert.Equal(t, "1\n2\n3", results[0].Matches[0].Message)
 	}
 }
