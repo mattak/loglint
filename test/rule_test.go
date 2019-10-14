@@ -182,7 +182,24 @@ end
 `, "\n"))
 			assert.True(t, isMatched)
 			assert.NotNil(t, matched)
-			assert.Equal(t, []string{"start", "aaa", "middle", "bbb", "end"}, matched.Matches)
+			assert.Equal(t, []string{"start\naaa\nmiddle\nbbb\nend"}, matched.Matches)
+			assert.Equal(t, "help2", matched.Help)
+		}
+
+		{
+			matched, isMatched := rule.Matches(strings.Split(`
+start
+aaa
+middle
+bbb
+end
+start
+middle
+end
+`, "\n"))
+			assert.True(t, isMatched)
+			assert.NotNil(t, matched)
+			assert.Equal(t, []string{"start\naaa\nmiddle\nbbb\nend", "start\nmiddle\nend"}, matched.Matches)
 			assert.Equal(t, "help2", matched.Help)
 		}
 	}

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"strings"
+	regexp2 "regexp"
 )
 
 type Linter struct {
@@ -43,15 +43,20 @@ func (linter *Linter) Prepare(filepath string) {
 }
 
 func (linter *Linter) Run(content string) LintResult {
-	lines := strings.Split(content, "\n")
+	lines := SplitLines(content)
 	result := LintResult{}
-	result.Errors = analyze(lines, linter.Errors)
-	result.Warnings = analyze(lines, linter.Warnings)
+	result.Errors = Analyze(lines, linter.Errors)
+	result.Warnings = Analyze(lines, linter.Warnings)
 	result.Passed = len(result.Errors) < 1
 	return result
 }
 
-func analyze(lines []string, rules []Rule) []Result {
+func SplitLines(content string) []string {
+	regexp := regexp2.MustCompile("\\r?\\n")
+	return regexp.Split(content, -1)
+}
+
+func Analyze(lines []string, rules []Rule) []Result {
 	var results []Result
 
 	for _, rule := range rules {

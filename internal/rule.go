@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"regexp"
+	"strings"
 )
 
 type Rule struct {
@@ -51,35 +52,61 @@ func (rule *Rule) Build() {
 
 func (rule *Rule) Matches(lines []string) (*Result, bool) {
 	matches := []string{}
-	startIndex := -1
-	lastIndex := -1
+	pass := true
+	index := 0
+
+	for pass {
+		match, _index, _pass := rule.Match(lines, index)
+		pass = _pass
+		index = _index
+
+		if _pass {
+			matches = append(matches, match)
+		}
+	}
+
+	if len(matches) < 1 {
+		return nil, false
+	}
+
+	return &Result{
+		Matches: matches,
+		Help:    rule.Help,
+	}, len(matches) > 0
+}
+
+func (rule *Rule) Match(lines []string, fromIndex int) (string, int, bool) {
+	matchStartIndex := -1
+	matchLastIndex := fromIndex - 1
 	lastRuleIndex := -1
 
+	if len(rule.DetectionsRegex) < 1 {
+		return "", len(lines), false
+	}
+
+	if fromIndex >= len(lines) {
+		return "", len(lines), false
+	}
+
 	for ruleIndex, regex := range rule.DetectionsRegex {
-		for i := lastIndex + 1; i < len(lines); i++ {
+		for i := matchLastIndex + 1; i < len(lines); i++ {
 			line := lines[i]
 
 			if regex.MatchString(line) {
-				if startIndex < 0 {
-					startIndex = i
+				if matchStartIndex < 0 {
+					matchStartIndex = i
 				}
-				lastIndex = i
+				matchLastIndex = i
 				lastRuleIndex = ruleIndex
 				break
 			}
 		}
 
 		if lastRuleIndex != ruleIndex {
-			return nil, false
+			return "", len(lines), false
 		}
 	}
 
-	for i := startIndex; i <= lastIndex; i++ {
-		matches = append(matches, lines[i])
-	}
-
-	return &Result{
-		Matches: matches,
-		Help:    rule.Help,
-	}, true
+	matched := strings.Join(lines[matchStartIndex:(matchLastIndex+1)], "\n")
+	return matched, matchLastIndex + 1, true
 }
