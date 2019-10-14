@@ -7,7 +7,11 @@ GOINSTALL=$(GOCMD) install
 BINARY_NAME=loglint
 BINARY_DIR=bin
 
-all: clean test build system_install
+all: clean deps test build system_install
+
+.PHONY: deps
+deps:
+	$(GOCMD) get
 
 .PHONY: test
 test:
