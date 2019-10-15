@@ -25,15 +25,15 @@ func main() {
 	app.Name = "loglint"
 	app.Usage = "log linter by local rules"
 	app.Description = "Analyze errors and warnings from log by simple rule file."
-	app.Version = "0.1.2"
+	app.Version = "0.1.3"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
-			Name: "execute, e",
+			Name:  "execute, e",
 			Value: "",
 			Usage: "rule json content by argument",
 		},
 		cli.StringFlag{
-			Name: "file, f",
+			Name:  "file, f",
 			Value: ".loglint.json",
 			Usage: "rule json file path",
 		},
