@@ -136,4 +136,6 @@ $ cat build.log | loglint -e '[{"detections":["^Error: 1", "^Error: 3"]}]' | jq 
 }
 ```
 
+## LICENSE
 
+[MIT](./LICENSE.md)
