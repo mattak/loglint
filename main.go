@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"github.com/mattak/loglint/internal"
 	"github.com/urfave/cli"
 	"io"
@@ -25,7 +26,7 @@ func main() {
 	app.Name = "loglint"
 	app.Usage = "log linter by local rules"
 	app.Description = "Analyze errors and warnings from log by simple rule file."
-	app.Version = "0.1.4"
+	app.Version = fmt.Sprintf("%s (%s)", VERSION, REVISION)
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:  "execute, e",

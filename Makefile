@@ -23,7 +23,7 @@ test:
 
 .PHONY: build
 build:
-	$(GOBUILD) -o $(BINARY_DIR)/$(BINARY_NAME) ./main.go
+	$(GOBUILD) -o $(BINARY_DIR)/$(BINARY_NAME) ./*.go
 
 .PHONY: run
 run:
